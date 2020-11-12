@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$/-Tweeter" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/CalculatorKotlin" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/ConvertisseurTauxDevise" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/EnregisteurHarcelements" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Harassment_Recorder" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/IFT1155-TP1_Ex2" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/JavaMail-API-Android" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/MonDicoQuebecois" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/Tweeter" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/autres_references/Devoir3_kanemity" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/autres_references/TP2_IFT1135" vcs="Git" />
+  </component>
+</project>
