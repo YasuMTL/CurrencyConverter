@@ -2,14 +2,23 @@ package com.yasu_k.currencyconverter
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
 class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
-    private var currencyFrom = ""
-    private var currencyTo = ""
-    private lateinit var uriApi: String
-    private val URL = "https://api.exchangeratesapi.io/latest"
+
+    companion object{
+        private var currencyFrom = ""
+        private var currencyTo = ""
+        private lateinit var urlApi: String
+        private val URL = "https://api.exchangeratesapi.io/"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,18 +50,51 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         }
     }
 
+    private fun getCurrentRate(){
+        val retrofit = Retrofit.Builder()
+            .baseUrl(URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+        val service = retrofit.create(ExchangeApiService::class.java)
+        val call = service.getExchangeRate(currencyFrom, currencyTo)
+        Log.d("CURRENCY", "currencyFrom: $currencyFrom currencyTo: $currencyTo")
+
+        call.enqueue(object : Callback<RateResponse> {
+            override fun onResponse(call: Call<RateResponse>?, response: Response<RateResponse>) {
+
+                var stringBuilder = "nothing"
+                Toast.makeText(applicationContext, "response code: ${response.code()}", Toast.LENGTH_SHORT).show()
+                if (response.code() == 200) {
+                    val rateResponse = response.body()
+
+                    stringBuilder = "real time rate: ${rateResponse.changeRate}"
+                }
+                Toast.makeText(applicationContext, "real time rate: $stringBuilder", Toast.LENGTH_SHORT).show()
+            }
+
+            override fun onFailure(call: Call<RateResponse>?, t: Throwable?) {
+                Toast.makeText(applicationContext, "FAILURE !!!", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
     override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
         when (parent.id){
             R.id.spinnerCurrencyFrom -> {
-                currencyFrom = "?base=" + parent.getItemAtPosition(position)
-                uriApi = URL + currencyFrom + currencyTo
-                Toast.makeText(this, "from $uriApi was selected", Toast.LENGTH_SHORT).show()
+                currencyFrom = "base=" + parent.getItemAtPosition(position)
+                urlApi = URL + currencyFrom + currencyTo
+                //Toast.makeText(this, "from $urlApi was selected", Toast.LENGTH_SHORT).show()
+
+                getCurrentRate()
             }
 
             R.id.spinnerCurrencyTo -> {
                 currencyTo = "&symbols=" + parent.getItemAtPosition(position)
-                uriApi = URL + currencyFrom + currencyTo
-                Toast.makeText(this, "to $uriApi was selected", Toast.LENGTH_SHORT).show()
+                urlApi = URL + currencyFrom + currencyTo
+                //Toast.makeText(this, "to $urlApi was selected", Toast.LENGTH_SHORT).show()
+
+                getCurrentRate()
             }
 
             else -> Toast.makeText(this, "an error?", Toast.LENGTH_SHORT).show()

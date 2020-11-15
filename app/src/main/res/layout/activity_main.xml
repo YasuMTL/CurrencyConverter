@@ -11,18 +11,20 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="300dp"
-        android:text="Clear"
+        android:text="@string/clear"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />
 
     <EditText
         android:id="@+id/tvCurrencyBeforeConversion"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="61dp"
+        android:layout_height="42dp"
         android:layout_marginEnd="80dp"
         android:layout_marginBottom="28dp"
-        android:hint="before conversion"
+        android:autofillHints=""
+        android:hint="@string/before_conversion"
+        android:inputType="numberDecimal"
         app:layout_constraintBottom_toTopOf="@+id/buttonClear"
         app:layout_constraintEnd_toStartOf="@+id/tvCurrencyAfterConversion"
         app:layout_constraintHorizontal_bias="1.0"
@@ -34,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="56dp"
         android:layout_marginBottom="44dp"
-        android:hint="after conversion"
+        android:hint="@string/after_conversion"
         app:layout_constraintBottom_toTopOf="@+id/buttonClear"
         app:layout_constraintEnd_toEndOf="parent" />
 
@@ -42,7 +44,7 @@
         android:id="@+id/tvRealRate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Rate in real time:"
+        android:text="@string/rate_in_real_time"
         app:layout_constraintBottom_toTopOf="@+id/tvCurrencyBeforeConversion"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.117"
