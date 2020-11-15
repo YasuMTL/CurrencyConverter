@@ -5,11 +5,14 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.*
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
@@ -18,6 +21,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         private var currencyTo = ""
         private lateinit var urlApi: String
         private val URL = "https://api.exchangeratesapi.io/"
+        private lateinit var tvRate: TextView
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -40,20 +44,33 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         spinnerCurrencyFrom.onItemSelectedListener = this
         spinnerCurrencyTo.onItemSelectedListener = this
 
-        val tvCurrencyFrom: EditText = findViewById(R.id.tvCurrencyBeforeConversion)
+        val etCurrencyFrom: EditText = findViewById(R.id.etCurrencyBeforeConversion)
         val tvCurrencyTo: TextView = findViewById(R.id.tvCurrencyAfterConversion)
         val buttonClear: Button = findViewById(R.id.buttonClear)
 
         buttonClear.setOnClickListener {
-            tvCurrencyFrom.setText("")
+            etCurrencyFrom.setText("")
             tvCurrencyTo.text = ""
         }
+
+        //Is this not secure way to declare?
+        tvRate = findViewById(R.id.tvRate)
     }
 
     private fun getCurrentRate(){
+        val okHttpClient = OkHttpClient.Builder()
+            .connectTimeout(20, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .addInterceptor(HttpLoggingInterceptor().apply {
+                level = HttpLoggingInterceptor.Level.BODY
+            })
+            .build()
+
         val retrofit = Retrofit.Builder()
             .baseUrl(URL)
             .addConverterFactory(GsonConverterFactory.create())
+            .client(okHttpClient)
             .build()
 
         val service = retrofit.create(ExchangeApiService::class.java)
@@ -63,14 +80,14 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         call.enqueue(object : Callback<RateResponse> {
             override fun onResponse(call: Call<RateResponse>?, response: Response<RateResponse>) {
 
-                var stringBuilder = "nothing"
+                var realRate = "nothing"
                 Toast.makeText(applicationContext, "response code: ${response.code()}", Toast.LENGTH_SHORT).show()
                 if (response.code() == 200) {
-                    val rateResponse = response.body()
+                    realRate = response.body().rates?.CAD.toString()
 
-                    stringBuilder = "real time rate: ${rateResponse.changeRate}"
+                    tvRate.text = realRate
                 }
-                Toast.makeText(applicationContext, "real time rate: $stringBuilder", Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "real time rate: $realRate", Toast.LENGTH_SHORT).show()
             }
 
             override fun onFailure(call: Call<RateResponse>?, t: Throwable?) {
@@ -82,7 +99,8 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
         when (parent.id){
             R.id.spinnerCurrencyFrom -> {
-                currencyFrom = "base=" + parent.getItemAtPosition(position)
+                //currencyFrom = "base=" + parent.getItemAtPosition(position)
+                currencyFrom = "" + parent.getItemAtPosition(position)
                 urlApi = URL + currencyFrom + currencyTo
                 //Toast.makeText(this, "from $urlApi was selected", Toast.LENGTH_SHORT).show()
 
@@ -90,7 +108,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             }
 
             R.id.spinnerCurrencyTo -> {
-                currencyTo = "&symbols=" + parent.getItemAtPosition(position)
+                currencyTo = "" + parent.getItemAtPosition(position)
                 urlApi = URL + currencyFrom + currencyTo
                 //Toast.makeText(this, "to $urlApi was selected", Toast.LENGTH_SHORT).show()
 
