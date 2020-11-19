@@ -19,8 +19,8 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     companion object{
         private var currencyFrom = ""
         private var currencyTo = ""
-        private lateinit var urlApi: String
-        private val URL = "https://api.exchangeratesapi.io/"
+        //private lateinit var urlApi: String
+        const val URL = "https://api.exchangeratesapi.io/"
         private lateinit var tvRate: TextView
     }
 
@@ -79,15 +79,19 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         call.enqueue(object : Callback<RateResponse> {
             override fun onResponse(call: Call<RateResponse>?, response: Response<RateResponse>) {
+                var realRate = 0.0
 
-                var realRate = "nothing"
                 Toast.makeText(applicationContext, "response code: ${response.code()}", Toast.LENGTH_SHORT).show()
                 if (response.code() == 200) {
-                    realRate = response.body().rates?.CAD.toString()
-
-                    tvRate.text = realRate
+                    when(currencyTo){
+                        "CAD" -> realRate = response.body().rates.CAD
+                        "USD" -> realRate = response.body().rates.USD
+                        "EUR" -> realRate = response.body().rates.EUR
+                        "JPY" -> realRate = response.body().rates.JPY
+                    }
+                    tvRate.text = realRate.toString()
                 }
-                Toast.makeText(applicationContext, "real time rate: $realRate", Toast.LENGTH_SHORT).show()
+                Toast.makeText(applicationContext, "real time rate: $realRate CurrencyFrom: $currencyFrom", Toast.LENGTH_SHORT).show()
             }
 
             override fun onFailure(call: Call<RateResponse>?, t: Throwable?) {
@@ -99,19 +103,12 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
         when (parent.id){
             R.id.spinnerCurrencyFrom -> {
-                //currencyFrom = "base=" + parent.getItemAtPosition(position)
                 currencyFrom = "" + parent.getItemAtPosition(position)
-                urlApi = URL + currencyFrom + currencyTo
-                //Toast.makeText(this, "from $urlApi was selected", Toast.LENGTH_SHORT).show()
-
                 getCurrentRate()
             }
 
             R.id.spinnerCurrencyTo -> {
                 currencyTo = "" + parent.getItemAtPosition(position)
-                urlApi = URL + currencyFrom + currencyTo
-                //Toast.makeText(this, "to $urlApi was selected", Toast.LENGTH_SHORT).show()
-
                 getCurrentRate()
             }
 

@@ -1,13 +1,16 @@
 package com.yasu_k.currencyconverter
 
+import com.google.gson.annotations.SerializedName
+
 data class RateResponse (
-        //val results: List<Result>
-        val rates: Rates? = null
+        @SerializedName("rates") var rates: Currencies,
+        @SerializedName("base") var base: String? = null,
+        @SerializedName("date") var date: String? = null
 )
 
-class Rates{
-    var CAD: Double = 0.toDouble()
-    /*var JPY: Double = 0.0
-    var USD: Double = 0.0
-    var EUR: Double = 0.0*/
-}
+data class Currencies(
+        var CAD: Double,
+        var USD: Double,
+        var EUR: Double,
+        var JPY: Double
+)
