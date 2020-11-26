@@ -29,6 +29,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         private lateinit var tvRate: TextView
         private lateinit var tvCurrencyTo: TextView
         private lateinit var etCurrencyFrom: EditText
+        private lateinit var tvRealRate: TextView
 
         var exchangeRates: MutableLiveData<RateResponse> = MutableLiveData()
     }
@@ -77,6 +78,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         setupObservers()
 
         tvRate = findViewById(R.id.tvRate)
+        tvRealRate = findViewById(R.id.tvRealRate)
     }
 
     private fun setupObservers(){
@@ -124,6 +126,8 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 val decimalFormat = DecimalFormat("0.00")
                 val apiResponse = response.body()
 
+                val dateRate: String
+
                 if (response.isSuccessful) {
 
                     realRate = when(currencyTo){
@@ -134,11 +138,16 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                         else -> 0.0
                     }
 
+                    dateRate = "Update: ${apiResponse.date.toString()}"
+
                     //LiveData
                     exchangeRates.postValue(apiResponse)
 
                     Log.d("tvRate", "I'm gonna update the exchange rate!!")
                     tvRate.text = decimalFormat.format(realRate)//realRate.toString()
+
+                    tvRealRate.text = dateRate
+
                 }else{
                     exchangeRates.postValue(null)
                     val errorBody: ResponseBody = response.errorBody()
