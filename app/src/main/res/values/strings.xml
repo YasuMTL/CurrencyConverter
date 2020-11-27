@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Currency Converter</string>
     <string name="clear">Clear</string>
-    <string name="rate_in_real_time">Rate in real time:</string>
+    <string name="rate_in_real_time">Rate:</string>
     <string name="before_conversion">0000.00</string>
     <string name="after_conversion">after conversion</string>
 </resources>
