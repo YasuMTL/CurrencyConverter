@@ -193,6 +193,5 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         }
     }
 
-    override fun onNothingSelected(parent: AdapterView<*>?) {
-    }
+    override fun onNothingSelected(parent: AdapterView<*>?) {}
 }
