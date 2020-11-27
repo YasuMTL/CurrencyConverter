@@ -30,6 +30,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         private lateinit var tvCurrencyTo: TextView
         private lateinit var etCurrencyFrom: EditText
         private lateinit var tvRealRate: TextView
+        private lateinit var tvCurrency: TextView
 
         var exchangeRates: MutableLiveData<RateResponse> = MutableLiveData()
     }
@@ -57,6 +58,8 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         etCurrencyFrom = findViewById(R.id.etCurrencyBeforeConversion)
         tvCurrencyTo = findViewById(R.id.tvCurrencyAfterConversion)
         val buttonClear: Button = findViewById(R.id.buttonClear)
+
+        tvCurrency = findViewById(R.id.tvCurrency)
 
         buttonClear.setOnClickListener {
             etCurrencyFrom.setText("")
@@ -130,12 +133,24 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
                 if (response.isSuccessful) {
 
-                    realRate = when(currencyTo){
+                    /*realRate = when(currencyTo){
                         "CAD" -> apiResponse.rates.CAD
                         "USD" -> apiResponse.rates.USD
                         "EUR" -> apiResponse.rates.EUR
                         "JPY" -> apiResponse.rates.JPY
                         else -> 0.0
+                    }*/
+                    when(currencyTo){
+                        "CAD" -> {realRate = apiResponse.rates.CAD
+                        tvCurrency.text = "$"}
+                        "USD" -> {realRate = apiResponse.rates.USD
+                        tvCurrency.text = "$"}
+                        "EUR" -> {realRate = apiResponse.rates.EUR
+                        tvCurrency.text = "€"}
+                        "JPY" -> {realRate = apiResponse.rates.JPY
+                        tvCurrency.text = "¥"}
+                        else -> {realRate = 0.0
+                        tvCurrency.text = ""}
                     }
 
                     dateRate = "Update: ${apiResponse.date.toString()}"
@@ -144,7 +159,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                     exchangeRates.postValue(apiResponse)
 
                     Log.d("tvRate", "I'm gonna update the exchange rate!!")
-                    tvRate.text = decimalFormat.format(realRate)//realRate.toString()
+                    tvRate.text = decimalFormat.format(realRate)
 
                     tvRealRate.text = dateRate
 
@@ -179,6 +194,5 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     }
 
     override fun onNothingSelected(parent: AdapterView<*>?) {
-        Toast.makeText(this, "Nothing is selected.", Toast.LENGTH_SHORT).show()
     }
 }
