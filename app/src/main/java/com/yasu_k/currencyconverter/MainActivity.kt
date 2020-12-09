@@ -1,4 +1,4 @@
-package com.yasu_k.currencyconverter
+    package com.yasu_k.currencyconverter
 
 import android.os.Bundle
 import android.text.Editable
@@ -126,7 +126,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         call.enqueue(object : Callback<RateResponse> {
             override fun onResponse(call: Call<RateResponse>?, response: Response<RateResponse>) {
                 val realRate: Double
-                val decimalFormat = DecimalFormat("0.00")
+                val decimalFormat = DecimalFormat("0.0000")
                 val apiResponse = response.body()
 
                 val dateRate: String
