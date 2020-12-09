@@ -39,32 +39,12 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val spinnerCurrencyFrom: Spinner = findViewById(R.id.spinnerCurrencyFrom)
-        val spinnerCurrencyTo: Spinner = findViewById(R.id.spinnerCurrencyTo)
-
-        ArrayAdapter.createFromResource(
-                this,
-                R.array.currency_array,
-                android.R.layout.simple_spinner_item
-        ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            spinnerCurrencyFrom.adapter = adapter
-            spinnerCurrencyTo.adapter = adapter
-        }
-
-        spinnerCurrencyFrom.onItemSelectedListener = this
-        spinnerCurrencyTo.onItemSelectedListener = this
-
+        setSpinners()
+        setButtonClear()
         etCurrencyFrom = findViewById(R.id.etCurrencyBeforeConversion)
         tvCurrencyTo = findViewById(R.id.tvCurrencyAfterConversion)
-        val buttonClear: Button = findViewById(R.id.buttonClear)
 
         tvCurrency = findViewById(R.id.tvCurrency)
-
-        buttonClear.setOnClickListener {
-            etCurrencyFrom.setText("")
-            tvCurrencyTo.text = ""
-        }
 
         etCurrencyFrom.addTextChangedListener(object: TextWatcher{
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -82,6 +62,33 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         tvRate = findViewById(R.id.tvRate)
         tvRealRate = findViewById(R.id.tvRealRate)
+    }
+
+    private fun setButtonClear(){
+        val buttonClear: Button = findViewById(R.id.buttonClear)
+
+        buttonClear.setOnClickListener {
+            etCurrencyFrom.setText("")
+            tvCurrencyTo.text = ""
+        }
+    }
+
+    private fun setSpinners(){
+        val spinnerCurrencyFrom: Spinner = findViewById(R.id.spinnerCurrencyFrom)
+        val spinnerCurrencyTo: Spinner = findViewById(R.id.spinnerCurrencyTo)
+
+        ArrayAdapter.createFromResource(
+                this,
+                R.array.currency_array,
+                android.R.layout.simple_spinner_item
+        ).also { adapter ->
+            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
+            spinnerCurrencyFrom.adapter = adapter
+            spinnerCurrencyTo.adapter = adapter
+        }
+
+        spinnerCurrencyFrom.onItemSelectedListener = this
+        spinnerCurrencyTo.onItemSelectedListener = this
     }
 
     private fun setupObservers(){
