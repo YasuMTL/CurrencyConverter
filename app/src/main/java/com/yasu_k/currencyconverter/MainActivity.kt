@@ -1,4 +1,4 @@
-    package com.yasu_k.currencyconverter
+package com.yasu_k.currencyconverter
 
 import android.os.Bundle
 import android.text.Editable
@@ -7,7 +7,9 @@ import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.*
+import com.yasu_k.currencyconverter.databinding.ActivityMainBinding
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
@@ -24,8 +26,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     companion object{
         const val URL = "https://api.exchangeratesapi.io/"
         private lateinit var tvRate: TextView
-        private lateinit var tvCurrencyTo: TextView
-        private lateinit var etCurrencyFrom: EditText
         private lateinit var tvRealRate: TextView
         private lateinit var tvCurrency: TextView
 
@@ -38,14 +38,16 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         mViewModel = ViewModelProviders.of(this).get(ConverterViewModel::class.java)
 
+        val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding.viewModel = mViewModel
+        binding.lifecycleOwner = this
+
         setSpinners()
-        setButtonClear()
-        etCurrencyFrom = findViewById(R.id.etCurrencyBeforeConversion)
-        tvCurrencyTo = findViewById(R.id.tvCurrencyAfterConversion)
+        //setButtonClear()
 
         tvCurrency = findViewById(R.id.tvCurrency)
 
-        etCurrencyFrom.addTextChangedListener(object: TextWatcher{
+        /*etCurrencyFrom.addTextChangedListener(object: TextWatcher{
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
             }
 
@@ -55,7 +57,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 convertCurrency()
             }
-        })
+        })*/
 
         setupObservers()
 
@@ -63,14 +65,14 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         tvRealRate = findViewById(R.id.tvRealRate)
     }
 
-    private fun setButtonClear(){
+    /*private fun setButtonClear(){
         val buttonClear: Button = findViewById(R.id.buttonClear)
 
         buttonClear.setOnClickListener {
             etCurrencyFrom.setText("")
             tvCurrencyTo.text = ""
         }
-    }
+    }*/
 
     private fun setSpinners(){
         val spinnerCurrencyFrom: Spinner = findViewById(R.id.spinnerCurrencyFrom)
@@ -93,21 +95,21 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     private fun setupObservers(){
         mViewModel.exchangeRates.observe(this, Observer {
             // this code is called whenever value of exchangeRates changes
-            convertCurrency()
+            //convertCurrency()
         })
     }
 
-    private fun convertCurrency(){
+    /*private fun convertCurrency(){
         Log.d("convertCurrency()", "Beginning of the conversion!!")
-        val currencyToConvert = etCurrencyFrom.text.toString()
+        val currencyToConvert = mViewModel.currencyFrom//etCurrencyFrom.text.toString()
         val exchangeRate = tvRate.text.toString()
 
         if (currencyToConvert != ""){
             val convertedCurrency: Double = currencyToConvert.toDouble() * exchangeRate.toDouble()
             val decimalFormat = DecimalFormat("0.0")
-            tvCurrencyTo.text = decimalFormat.format(convertedCurrency)
+            *//*tvCurrencyTo*//*mViewModel.currencyTo*//*.text*//* = decimalFormat.format(convertedCurrency)
         }
-    }
+    }*/
 
     private fun getCurrentRate(){
         val okHttpClient = OkHttpClient.Builder()
@@ -140,13 +142,18 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 if (response.isSuccessful) {
                     when(mViewModel.currencyTo){
                         "CAD" -> {realRate = apiResponse.rates.CAD
-                        tvCurrency.text = "$"}
+                        tvCurrency.text = "$"
+                        //To keep and use the value of the exchange rate in the XML file
+                        mViewModel.exchangeRate = apiResponse.rates.CAD}
                         "USD" -> {realRate = apiResponse.rates.USD
-                        tvCurrency.text = "$"}
+                        tvCurrency.text = "$"
+                        mViewModel.exchangeRate = apiResponse.rates.USD}
                         "EUR" -> {realRate = apiResponse.rates.EUR
-                        tvCurrency.text = "€"}
+                        tvCurrency.text = "€"
+                        mViewModel.exchangeRate = apiResponse.rates.EUR}
                         "JPY" -> {realRate = apiResponse.rates.JPY
-                        tvCurrency.text = "¥"}
+                        tvCurrency.text = "¥"
+                        mViewModel.exchangeRate = apiResponse.rates.JPY}
                         else -> {realRate = 0.0
                         tvCurrency.text = ""}
                     }
