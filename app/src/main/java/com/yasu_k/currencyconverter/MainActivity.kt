@@ -43,36 +43,14 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         binding.lifecycleOwner = this
 
         setSpinners()
-        //setButtonClear()
 
         tvCurrency = findViewById(R.id.tvCurrency)
-
-        /*etCurrencyFrom.addTextChangedListener(object: TextWatcher{
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                convertCurrency()
-            }
-        })*/
 
         setupObservers()
 
         tvRate = findViewById(R.id.tvRate)
         tvRealRate = findViewById(R.id.tvRealRate)
     }
-
-    /*private fun setButtonClear(){
-        val buttonClear: Button = findViewById(R.id.buttonClear)
-
-        buttonClear.setOnClickListener {
-            etCurrencyFrom.setText("")
-            tvCurrencyTo.text = ""
-        }
-    }*/
 
     private fun setSpinners(){
         val spinnerCurrencyFrom: Spinner = findViewById(R.id.spinnerCurrencyFrom)
@@ -98,18 +76,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             //convertCurrency()
         })
     }
-
-    /*private fun convertCurrency(){
-        Log.d("convertCurrency()", "Beginning of the conversion!!")
-        val currencyToConvert = mViewModel.currencyFrom//etCurrencyFrom.text.toString()
-        val exchangeRate = tvRate.text.toString()
-
-        if (currencyToConvert != ""){
-            val convertedCurrency: Double = currencyToConvert.toDouble() * exchangeRate.toDouble()
-            val decimalFormat = DecimalFormat("0.0")
-            *//*tvCurrencyTo*//*mViewModel.currencyTo*//*.text*//* = decimalFormat.format(convertedCurrency)
-        }
-    }*/
 
     private fun getCurrentRate(){
         val okHttpClient = OkHttpClient.Builder()
@@ -144,17 +110,26 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                         "CAD" -> {realRate = apiResponse.rates.CAD
                         tvCurrency.text = "$"
                         //To keep and use the value of the exchange rate in the XML file
-                        mViewModel.exchangeRate = apiResponse.rates.CAD}
+                        //mViewModel.exchangeRate = apiResponse.rates.CAD}
+                        mViewModel.exchangeRate.value = apiResponse.rates.CAD}
+
                         "USD" -> {realRate = apiResponse.rates.USD
                         tvCurrency.text = "$"
-                        mViewModel.exchangeRate = apiResponse.rates.USD}
+                        //mViewModel.exchangeRate = apiResponse.rates.USD}
+                        mViewModel.exchangeRate.value = apiResponse.rates.USD}
+
                         "EUR" -> {realRate = apiResponse.rates.EUR
                         tvCurrency.text = "€"
-                        mViewModel.exchangeRate = apiResponse.rates.EUR}
+                        //mViewModel.exchangeRate = apiResponse.rates.EUR}
+                        mViewModel.exchangeRate.value = apiResponse.rates.EUR}
+
                         "JPY" -> {realRate = apiResponse.rates.JPY
                         tvCurrency.text = "¥"
-                        mViewModel.exchangeRate = apiResponse.rates.JPY}
+                        //mViewModel.exchangeRate = apiResponse.rates.JPY}
+                        mViewModel.exchangeRate.value = apiResponse.rates.JPY}
+
                         else -> {realRate = 0.0
+                        mViewModel.exchangeRate.value = 0.0
                         tvCurrency.text = ""}
                     }
 
