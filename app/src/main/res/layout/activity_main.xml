@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:tools="http://schemas.android.com/tools">
+    <data>
+        <variable
+            name="viewModel"
+            type="com.yasu_k.currencyconverter.ConverterViewModel" />
+        <import type="android.view.View"/>
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MainActivity">
@@ -12,6 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="@string/clear"
+        android:onClick="@{() -> viewModel.buttonClear()}"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -73,21 +82,21 @@
             android:orientation="horizontal">
 
             <TextView
-                android:id="@+id/tvRealRate"
+                android:id="@+id/tvRateDate"
                 android:layout_width="159dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:layout_marginEnd="0dp"
                 android:gravity="start"
-                android:text="@string/rate_in_real_time" />
+                android:text="@{viewModel.rateDate}" />
 
             <TextView
                 android:id="@+id/tvRate"
                 android:layout_width="37dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:hint="0.0"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                app:displayedExchangeRate="@{viewModel.exchangeRate}"/>
 
         </LinearLayout>
 
@@ -107,22 +116,29 @@
                 android:autofillHints=""
                 android:gravity="center"
                 android:hint="@string/before_conversion"
-                android:inputType="numberDecimal" />
+                android:inputType="numberDecimal"
+                android:text="@={viewModel.amountBeforeConversion}"
+                />
 
             <TextView
                 android:id="@+id/tvCurrencyAfterConversion"
                 android:layout_width="79dp"
                 android:layout_height="match_parent"
                 android:gravity="end|center"
-                android:hint="@string/after_conversion" />
+                android:hint="@string/after_conversion"
+                app:currentAmount="@{viewModel.amountBeforeConversion}"
+                app:exchangeRate="@{viewModel.exchangeRate}"/>
 
             <TextView
                 android:id="@+id/tvCurrency"
                 android:layout_width="20dp"
                 android:gravity="center"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:text="@{viewModel.currencySymbol}"
+                />
         </LinearLayout>
 
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

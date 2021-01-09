@@ -1,14 +1,13 @@
-    package com.yasu_k.currencyconverter
+package com.yasu_k.currencyconverter
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.*
+import com.yasu_k.currencyconverter.databinding.ActivityMainBinding
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
@@ -17,60 +16,26 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.text.DecimalFormat
 import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     companion object{
-        private var currencyFrom = ""
-        private var currencyTo = ""
         const val URL = "https://api.exchangeratesapi.io/"
-        private lateinit var tvRate: TextView
-        private lateinit var tvCurrencyTo: TextView
-        private lateinit var etCurrencyFrom: EditText
-        private lateinit var tvRealRate: TextView
-        private lateinit var tvCurrency: TextView
-
-        var exchangeRates: MutableLiveData<RateResponse> = MutableLiveData()
+        private lateinit var mViewModel: ConverterViewModel
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        mViewModel = ViewModelProviders.of(this).get(ConverterViewModel::class.java)
+
+        val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
+        binding.viewModel = mViewModel
+        binding.lifecycleOwner = this
+
         setSpinners()
-        setButtonClear()
-        etCurrencyFrom = findViewById(R.id.etCurrencyBeforeConversion)
-        tvCurrencyTo = findViewById(R.id.tvCurrencyAfterConversion)
-
-        tvCurrency = findViewById(R.id.tvCurrency)
-
-        etCurrencyFrom.addTextChangedListener(object: TextWatcher{
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                convertCurrency()
-            }
-        })
-
-        setupObservers()
-
-        tvRate = findViewById(R.id.tvRate)
-        tvRealRate = findViewById(R.id.tvRealRate)
-    }
-
-    private fun setButtonClear(){
-        val buttonClear: Button = findViewById(R.id.buttonClear)
-
-        buttonClear.setOnClickListener {
-            etCurrencyFrom.setText("")
-            tvCurrencyTo.text = ""
-        }
     }
 
     private fun setSpinners(){
@@ -91,25 +56,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         spinnerCurrencyTo.onItemSelectedListener = this
     }
 
-    private fun setupObservers(){
-        exchangeRates.observe(this, Observer {
-            // this code is called whenever value of exchangeRates changes
-            convertCurrency()
-        })
-    }
-
-    private fun convertCurrency(){
-        Log.d("convertCurrency()", "Beginning of the conversion!!")
-        val currencyToConvert = etCurrencyFrom.text.toString()
-        val exchangeRate = tvRate.text.toString()
-
-        if (currencyToConvert != ""){
-            val convertedCurrency: Double = currencyToConvert.toDouble() * exchangeRate.toDouble()
-            val decimalFormat = DecimalFormat("0.0")
-            tvCurrencyTo.text = decimalFormat.format(convertedCurrency)
-        }
-    }
-
     private fun getCurrentRate(){
         val okHttpClient = OkHttpClient.Builder()
             .connectTimeout(20, TimeUnit.SECONDS)
@@ -127,51 +73,45 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             .build()
 
         val service = retrofit.create(ExchangeApiService::class.java)
-        val call = service.getExchangeRate(currencyFrom, currencyTo)
-        Log.d("CURRENCY", "currencyFrom: $currencyFrom currencyTo: $currencyTo")
+        val call = service.getExchangeRate(mViewModel.currencyFrom, mViewModel.currencyTo)
+        Log.d("CURRENCY", "currencyFrom: ${mViewModel.currencyFrom} currencyTo: ${mViewModel.currencyTo}")
 
         call.enqueue(object : Callback<RateResponse> {
             override fun onResponse(call: Call<RateResponse>?, response: Response<RateResponse>) {
-                val realRate: Double
-                val decimalFormat = DecimalFormat("0.0000")
                 val apiResponse = response.body()
 
-                val dateRate: String
-
                 if (response.isSuccessful) {
+                    when(mViewModel.currencyTo){
+                        "CAD" -> {
+                        mViewModel.currencySymbol.value = "$"
+                        mViewModel.exchangeRate.value = apiResponse.rates.CAD}
 
-                    /*realRate = when(currencyTo){
-                        "CAD" -> apiResponse.rates.CAD
-                        "USD" -> apiResponse.rates.USD
-                        "EUR" -> apiResponse.rates.EUR
-                        "JPY" -> apiResponse.rates.JPY
-                        else -> 0.0
-                    }*/
-                    when(currencyTo){
-                        "CAD" -> {realRate = apiResponse.rates.CAD
-                        tvCurrency.text = "$"}
-                        "USD" -> {realRate = apiResponse.rates.USD
-                        tvCurrency.text = "$"}
-                        "EUR" -> {realRate = apiResponse.rates.EUR
-                        tvCurrency.text = "€"}
-                        "JPY" -> {realRate = apiResponse.rates.JPY
-                        tvCurrency.text = "¥"}
-                        else -> {realRate = 0.0
-                        tvCurrency.text = ""}
+                        "USD" -> {
+                        mViewModel.currencySymbol.value = "$"
+                        mViewModel.exchangeRate.value = apiResponse.rates.USD}
+
+                        "EUR" -> {
+                        mViewModel.currencySymbol.value = "€"
+                        mViewModel.exchangeRate.value = apiResponse.rates.EUR}
+
+                        "JPY" -> {
+                        mViewModel.currencySymbol.value = "¥"
+                        mViewModel.exchangeRate.value = apiResponse.rates.JPY}
+
+                        else -> {
+                        mViewModel.exchangeRate.value = 0.0
+                        mViewModel.currencySymbol.value = ""}
                     }
 
-                    dateRate = "Update: ${apiResponse.date.toString()}"
+                    mViewModel.rateDate.value = "Update: ${apiResponse.date.toString()}"
 
                     //LiveData
-                    exchangeRates.postValue(apiResponse)
+                    mViewModel.exchangeRates.postValue(apiResponse)
 
                     Log.d("tvRate", "I'm gonna update the exchange rate!!")
-                    tvRate.text = decimalFormat.format(realRate)
-
-                    tvRealRate.text = dateRate
 
                 }else{
-                    exchangeRates.postValue(null)
+                    mViewModel.exchangeRates.postValue(null)
                     val errorBody: ResponseBody = response.errorBody()
                     Log.e("API call fail", errorBody.toString())
                 }
@@ -179,7 +119,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
             override fun onFailure(call: Call<RateResponse>?, t: Throwable?) {
                 Toast.makeText(applicationContext, "FAILURE !!!", Toast.LENGTH_SHORT).show()
-                exchangeRates.postValue(null)
+                mViewModel.exchangeRates.postValue(null)
             }
         })
     }
@@ -187,12 +127,12 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
         when (parent.id){
             R.id.spinnerCurrencyFrom -> {
-                currencyFrom = "" + parent.getItemAtPosition(position)
+                mViewModel.currencyFrom = "" + parent.getItemAtPosition(position)
                 getCurrentRate()
             }
 
             R.id.spinnerCurrencyTo -> {
-                currencyTo = "" + parent.getItemAtPosition(position)
+                mViewModel.currencyTo = "" + parent.getItemAtPosition(position)
                 getCurrentRate()
             }
 
