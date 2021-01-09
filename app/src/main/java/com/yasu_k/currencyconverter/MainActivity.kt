@@ -16,17 +16,12 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import java.text.DecimalFormat
 import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     companion object{
         const val URL = "https://api.exchangeratesapi.io/"
-        //private lateinit var tvRate: TextView
-        private lateinit var tvRealRate: TextView
-        private lateinit var tvCurrency: TextView
-
         private lateinit var mViewModel: ConverterViewModel
     }
 
@@ -41,11 +36,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         binding.lifecycleOwner = this
 
         setSpinners()
-
-        tvCurrency = findViewById(R.id.tvCurrency)
-
-        //tvRate = findViewById(R.id.tvRate)
-        tvRealRate = findViewById(R.id.tvRealRate)
     }
 
     private fun setSpinners(){
@@ -88,44 +78,37 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         call.enqueue(object : Callback<RateResponse> {
             override fun onResponse(call: Call<RateResponse>?, response: Response<RateResponse>) {
-                val decimalFormat = DecimalFormat("0.0000")
                 val apiResponse = response.body()
-
-                val dateRate: String
 
                 if (response.isSuccessful) {
                     when(mViewModel.currencyTo){
                         "CAD" -> {
-                        tvCurrency.text = "$"
-                        //To keep and use the value of the exchange rate in the XML file
+                        mViewModel.currencySymbol.value = "$"
                         mViewModel.exchangeRate.value = apiResponse.rates.CAD}
 
                         "USD" -> {
-                        tvCurrency.text = "$"
+                        mViewModel.currencySymbol.value = "$"
                         mViewModel.exchangeRate.value = apiResponse.rates.USD}
 
                         "EUR" -> {
-                        tvCurrency.text = "€"
+                        mViewModel.currencySymbol.value = "€"
                         mViewModel.exchangeRate.value = apiResponse.rates.EUR}
 
                         "JPY" -> {
-                        tvCurrency.text = "¥"
+                        mViewModel.currencySymbol.value = "¥"
                         mViewModel.exchangeRate.value = apiResponse.rates.JPY}
 
                         else -> {
                         mViewModel.exchangeRate.value = 0.0
-                        tvCurrency.text = ""}
+                        mViewModel.currencySymbol.value = ""}
                     }
 
-                    dateRate = "Update: ${apiResponse.date.toString()}"
+                    mViewModel.rateDate.value = "Update: ${apiResponse.date.toString()}"
 
                     //LiveData
                     mViewModel.exchangeRates.postValue(apiResponse)
 
                     Log.d("tvRate", "I'm gonna update the exchange rate!!")
-                    //tvRate.text = decimalFormat.format(realRate)
-
-                    tvRealRate.text = dateRate
 
                 }else{
                     mViewModel.exchangeRates.postValue(null)
