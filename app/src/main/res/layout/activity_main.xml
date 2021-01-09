@@ -20,7 +20,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:text="@string/clear"
-        android:onClick="@{(v) -> viewModel.buttonClear()}"
+        android:onClick="@{() -> viewModel.buttonClear()}"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
@@ -95,8 +95,8 @@
                 android:layout_width="37dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
-                android:hint="0.0"
-                android:textAlignment="center" />
+                android:textAlignment="center"
+                app:displayedExchangeRate="@{viewModel.exchangeRate}"/>
 
         </LinearLayout>
 

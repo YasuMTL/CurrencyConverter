@@ -17,3 +17,9 @@ fun onTextChanged(textView:TextView, currentAmount: String, exchangeRate: Double
 
     Log.d("BindingAdapter", "currentAmount: $currentAmount, exchangeRate: $exchangeRate")
 }
+
+@BindingAdapter("app:displayedExchangeRate")
+fun formatDecimal(textView: TextView, exchangeRate: Double){
+    val decimalFormat = DecimalFormat("0.0000")
+    textView.text = decimalFormat.format(exchangeRate)
+}

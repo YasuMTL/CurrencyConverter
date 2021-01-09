@@ -1,8 +1,6 @@
 package com.yasu_k.currencyconverter
 
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.widget.*
@@ -25,7 +23,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     companion object{
         const val URL = "https://api.exchangeratesapi.io/"
-        private lateinit var tvRate: TextView
+        //private lateinit var tvRate: TextView
         private lateinit var tvRealRate: TextView
         private lateinit var tvCurrency: TextView
 
@@ -46,9 +44,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         tvCurrency = findViewById(R.id.tvCurrency)
 
-        setupObservers()
-
-        tvRate = findViewById(R.id.tvRate)
+        //tvRate = findViewById(R.id.tvRate)
         tvRealRate = findViewById(R.id.tvRealRate)
     }
 
@@ -68,13 +64,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         spinnerCurrencyFrom.onItemSelectedListener = this
         spinnerCurrencyTo.onItemSelectedListener = this
-    }
-
-    private fun setupObservers(){
-        mViewModel.exchangeRates.observe(this, Observer {
-            // this code is called whenever value of exchangeRates changes
-            //convertCurrency()
-        })
     }
 
     private fun getCurrentRate(){
@@ -99,7 +88,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         call.enqueue(object : Callback<RateResponse> {
             override fun onResponse(call: Call<RateResponse>?, response: Response<RateResponse>) {
-                val realRate: Double
                 val decimalFormat = DecimalFormat("0.0000")
                 val apiResponse = response.body()
 
@@ -107,28 +95,24 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
                 if (response.isSuccessful) {
                     when(mViewModel.currencyTo){
-                        "CAD" -> {realRate = apiResponse.rates.CAD
+                        "CAD" -> {
                         tvCurrency.text = "$"
                         //To keep and use the value of the exchange rate in the XML file
-                        //mViewModel.exchangeRate = apiResponse.rates.CAD}
                         mViewModel.exchangeRate.value = apiResponse.rates.CAD}
 
-                        "USD" -> {realRate = apiResponse.rates.USD
+                        "USD" -> {
                         tvCurrency.text = "$"
-                        //mViewModel.exchangeRate = apiResponse.rates.USD}
                         mViewModel.exchangeRate.value = apiResponse.rates.USD}
 
-                        "EUR" -> {realRate = apiResponse.rates.EUR
+                        "EUR" -> {
                         tvCurrency.text = "€"
-                        //mViewModel.exchangeRate = apiResponse.rates.EUR}
                         mViewModel.exchangeRate.value = apiResponse.rates.EUR}
 
-                        "JPY" -> {realRate = apiResponse.rates.JPY
+                        "JPY" -> {
                         tvCurrency.text = "¥"
-                        //mViewModel.exchangeRate = apiResponse.rates.JPY}
                         mViewModel.exchangeRate.value = apiResponse.rates.JPY}
 
-                        else -> {realRate = 0.0
+                        else -> {
                         mViewModel.exchangeRate.value = 0.0
                         tvCurrency.text = ""}
                     }
@@ -139,7 +123,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                     mViewModel.exchangeRates.postValue(apiResponse)
 
                     Log.d("tvRate", "I'm gonna update the exchange rate!!")
-                    tvRate.text = decimalFormat.format(realRate)
+                    //tvRate.text = decimalFormat.format(realRate)
 
                     tvRealRate.text = dateRate
 
