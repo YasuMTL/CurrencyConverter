@@ -42,16 +42,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         val spinnerCurrencyFrom: Spinner = findViewById(R.id.spinnerCurrencyFrom)
         val spinnerCurrencyTo: Spinner = findViewById(R.id.spinnerCurrencyTo)
 
-        ArrayAdapter.createFromResource(
-                this,
-                R.array.currency_array,
-                android.R.layout.simple_spinner_item
-        ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            spinnerCurrencyFrom.adapter = adapter
-            spinnerCurrencyTo.adapter = adapter
-        }
-
         spinnerCurrencyFrom.onItemSelectedListener = this
         spinnerCurrencyTo.onItemSelectedListener = this
     }
@@ -73,7 +63,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             .build()
 
         val service = retrofit.create(ExchangeApiService::class.java)
-        val call = service.getExchangeRate(mViewModel.currencyFrom, mViewModel.currencyTo)
+        val call = service.getExchangeRate(mViewModel.currencyFrom.value, mViewModel.currencyTo.value)
         Log.d("CURRENCY", "currencyFrom: ${mViewModel.currencyFrom} currencyTo: ${mViewModel.currencyTo}")
 
         call.enqueue(object : Callback<RateResponse> {
@@ -81,7 +71,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 val apiResponse = response.body()
 
                 if (response.isSuccessful) {
-                    when(mViewModel.currencyTo){
+                    when(mViewModel.currencyTo.value){
                         "CAD" -> {
                         mViewModel.currencySymbol.value = "$"
                         mViewModel.exchangeRate.value = apiResponse.rates.CAD}
@@ -127,12 +117,12 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
         when (parent.id){
             R.id.spinnerCurrencyFrom -> {
-                mViewModel.currencyFrom = "" + parent.getItemAtPosition(position)
+                mViewModel.currencyFrom.value = "" + parent.getItemAtPosition(position)
                 getCurrentRate()
             }
 
             R.id.spinnerCurrencyTo -> {
-                mViewModel.currencyTo = "" + parent.getItemAtPosition(position)
+                mViewModel.currencyTo.value = "" + parent.getItemAtPosition(position)
                 getCurrentRate()
             }
 
