@@ -53,7 +53,8 @@
             <Spinner
                 android:id="@+id/spinnerCurrencyFrom"
                 android:layout_width="130dp"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:entries="@array/currency_array"/>
 
             <TextView
                 android:id="@+id/tvAllow"
@@ -70,7 +71,8 @@
             <Spinner
                 android:id="@+id/spinnerCurrencyTo"
                 android:layout_width="130dp"
-                android:layout_height="match_parent" />
+                android:layout_height="match_parent"
+                android:entries="@array/currency_array"/>
         </LinearLayout>
 
         <LinearLayout

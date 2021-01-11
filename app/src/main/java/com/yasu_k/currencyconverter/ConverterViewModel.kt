@@ -9,16 +9,15 @@ class ConverterViewModel: ViewModel() {
     val rateDate: MutableLiveData<String> = MutableLiveData()
     val currencySymbol: MutableLiveData<String> = MutableLiveData()
     val exchangeRates: MutableLiveData<RateResponse> = MutableLiveData()
-    //var exchangeRate: Double = 0.0
     val exchangeRate: MutableLiveData<Double> = MutableLiveData()
     val amountBeforeConversion: MutableLiveData<String> = MutableLiveData()
+
     init {
         amountBeforeConversion.value = ""
         exchangeRate.value = 0.0
         rateDate.value = ""
         currencySymbol.value = ""
     }
-    //val a: LiveData<String> = amountBeforeConversion
 
     fun buttonClear(){
         currencyFrom = ""

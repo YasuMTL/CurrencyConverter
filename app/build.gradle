@@ -33,14 +33,11 @@ android {
 
     buildFeatures {
         dataBinding = true
+        viewBinding = true
     }
 
     apply plugin: 'kotlin-kapt'
-    apply plugin: 'kotlin-android-extensions'
-
-    /*dataBinding {
-        enabled = true
-    }*/
+    //apply plugin: 'kotlin-android-extensions'
 }
 
 dependencies {
@@ -52,6 +49,7 @@ dependencies {
 
     implementation 'com.squareup.retrofit2:retrofit:2.0.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.0.0'
+
     // ViewModel
     def lifecycle_version = "2.2.0"
     implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version"
@@ -62,6 +60,8 @@ dependencies {
     def okhttp_version = '3.11.0'
     implementation "com.squareup.okhttp3:okhttp:$okhttp_version"
     implementation "com.squareup.okhttp3:logging-interceptor:$okhttp_version"
+
+    implementation 'com.google.android.material:material:1.2.1'
 
     testImplementation 'junit:junit:4.13.1'
     androidTestImplementation 'androidx.test.ext:junit:1.1.2'

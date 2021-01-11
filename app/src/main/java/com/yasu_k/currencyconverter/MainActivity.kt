@@ -42,16 +42,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         val spinnerCurrencyFrom: Spinner = findViewById(R.id.spinnerCurrencyFrom)
         val spinnerCurrencyTo: Spinner = findViewById(R.id.spinnerCurrencyTo)
 
-        ArrayAdapter.createFromResource(
-                this,
-                R.array.currency_array,
-                android.R.layout.simple_spinner_item
-        ).also { adapter ->
-            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-            spinnerCurrencyFrom.adapter = adapter
-            spinnerCurrencyTo.adapter = adapter
-        }
-
         spinnerCurrencyFrom.onItemSelectedListener = this
         spinnerCurrencyTo.onItemSelectedListener = this
     }
