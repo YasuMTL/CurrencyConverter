@@ -6,6 +6,6 @@ import retrofit2.http.Query
 
 interface ExchangeApiService {
     @GET("latest")
-    fun getExchangeRate(@Query("base") currencyFrom: String,
-                        @Query("symbols") currencyTo: String) : Call<RateResponse>
+    fun getExchangeRate(@Query("base") currencyFrom: String?,
+                        @Query("symbols") currencyTo: String?) : Call<RateResponse>
 }

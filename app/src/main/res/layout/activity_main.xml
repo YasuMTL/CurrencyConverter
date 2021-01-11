@@ -28,119 +28,117 @@
         app:layout_constraintTop_toBottomOf="@+id/containerCalculation"
         app:layout_constraintVertical_chainStyle="packed" />
 
-    <LinearLayout
-        android:id="@+id/containerCalculation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@+id/buttonClear"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed">
-
         <LinearLayout
-            android:id="@+id/linearLayoutSpinners"
+            android:id="@+id/containerCalculation"
             android:layout_width="match_parent"
-            android:layout_height="45dp"
-            android:layout_margin="10dp"
-            android:layout_marginTop="20dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toTopOf="@+id/buttonClear"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed">
 
-            <Spinner
-                android:id="@+id/spinnerCurrencyFrom"
-                android:layout_width="130dp"
-                android:layout_height="match_parent"
-                android:entries="@array/currency_array"/>
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tvAllow"
-                android:layout_width="50dp"
-                android:layout_height="match_parent"
-                android:layout_marginHorizontal="0dp"
-                android:ems="10"
+            <LinearLayout
+                android:id="@+id/linearLayoutSpinners"
+                android:layout_width="match_parent"
+                android:layout_height="45dp"
+                android:layout_margin="10dp"
+                android:layout_marginTop="20dp"
+                android:layout_weight="1"
                 android:gravity="center"
-                android:inputType="textPersonName"
-                android:text="⇒"
-                android:textAlignment="center"
-                android:textSize="20sp" />
+                android:orientation="horizontal">
 
-            <Spinner
-                android:id="@+id/spinnerCurrencyTo"
-                android:layout_width="130dp"
-                android:layout_height="match_parent"
-                android:entries="@array/currency_array"/>
+                <Spinner
+                    android:id="@+id/spinnerCurrencyFrom"
+                    android:layout_width="130dp"
+                    android:layout_height="match_parent"
+                    android:entries="@array/currency_array" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tvAllow"
+                    android:layout_width="50dp"
+                    android:layout_height="match_parent"
+                    android:layout_marginHorizontal="0dp"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:inputType="textPersonName"
+                    android:text="⇒"
+                    android:textAlignment="center"
+                    android:textSize="20sp" />
+
+                <Spinner
+                    android:id="@+id/spinnerCurrencyTo"
+                    android:layout_width="130dp"
+                    android:layout_height="match_parent"
+                    android:entries="@array/currency_array" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/linearLayoutRate"
+                android:layout_width="match_parent"
+                android:layout_height="35dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tvRateDate"
+                    android:layout_width="159dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:layout_marginEnd="0dp"
+                    android:gravity="start"
+                    android:text="@{viewModel.rateDate}" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tvRate"
+                    android:layout_width="37dp"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="center"
+                    android:textAlignment="center"
+                    app:displayedExchangeRate="@{viewModel.exchangeRate}" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/containerAmounts"
+                android:layout_width="match_parent"
+                android:layout_height="46dp"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/etCurrencyBeforeConversion"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_marginEnd="0dp"
+                    android:autofillHints=""
+                    android:gravity="center"
+                    android:hint="@string/before_conversion"
+                    android:inputType="numberDecimal"
+                    android:text="@={viewModel.amountBeforeConversion}" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tvCurrencyAfterConversion"
+                    android:layout_width="79dp"
+                    android:layout_height="match_parent"
+                    android:gravity="end|center"
+                    android:hint="@string/after_conversion"
+                    app:currentAmount="@{viewModel.amountBeforeConversion}"
+                    app:exchangeRate="@{viewModel.exchangeRate}" />
+
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tvCurrency"
+                    android:layout_width="20dp"
+                    android:layout_height="match_parent"
+                    android:gravity="center"
+                    android:text="@{viewModel.currencySymbol}" />
+            </LinearLayout>
+
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/linearLayoutRate"
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tvRateDate"
-                android:layout_width="159dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:layout_marginEnd="0dp"
-                android:gravity="start"
-                android:text="@{viewModel.rateDate}" />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tvRate"
-                android:layout_width="37dp"
-                android:layout_height="match_parent"
-                android:layout_gravity="center"
-                android:textAlignment="center"
-                app:displayedExchangeRate="@{viewModel.exchangeRate}"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/containerAmounts"
-            android:layout_width="match_parent"
-            android:layout_height="46dp"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:orientation="horizontal">
-
-            <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/etCurrencyBeforeConversion"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginEnd="0dp"
-                android:autofillHints=""
-                android:gravity="center"
-                android:hint="@string/before_conversion"
-                android:inputType="numberDecimal"
-                android:text="@={viewModel.amountBeforeConversion}"
-                />
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tvCurrencyAfterConversion"
-                android:layout_width="79dp"
-                android:layout_height="match_parent"
-                android:gravity="end|center"
-                android:hint="@string/after_conversion"
-                app:currentAmount="@{viewModel.amountBeforeConversion}"
-                app:exchangeRate="@{viewModel.exchangeRate}"/>
-
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tvCurrency"
-                android:layout_width="20dp"
-                android:gravity="center"
-                android:layout_height="match_parent"
-                android:text="@{viewModel.currencySymbol}"
-                />
-        </LinearLayout>
-
-    </LinearLayout>
-
-</androidx.constraintlayout.widget.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

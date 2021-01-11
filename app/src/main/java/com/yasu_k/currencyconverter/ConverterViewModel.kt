@@ -4,8 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class ConverterViewModel: ViewModel() {
-    var currencyFrom = ""
-    var currencyTo = ""
+    val currencyFrom: MutableLiveData<String> = MutableLiveData()
+    val currencyTo: MutableLiveData<String> = MutableLiveData()
     val rateDate: MutableLiveData<String> = MutableLiveData()
     val currencySymbol: MutableLiveData<String> = MutableLiveData()
     val exchangeRates: MutableLiveData<RateResponse> = MutableLiveData()
@@ -13,6 +13,8 @@ class ConverterViewModel: ViewModel() {
     val amountBeforeConversion: MutableLiveData<String> = MutableLiveData()
 
     init {
+        currencyFrom.value = ""
+        currencyTo.value = ""
         amountBeforeConversion.value = ""
         exchangeRate.value = 0.0
         rateDate.value = ""
@@ -20,7 +22,6 @@ class ConverterViewModel: ViewModel() {
     }
 
     fun buttonClear(){
-        currencyFrom = ""
-        currencyTo = ""
+        amountBeforeConversion.value = ""
     }
 }

@@ -15,6 +15,8 @@ fun onTextChanged(textView:TextView, currentAmount: String, exchangeRate: Double
             val amountAfterConv = currentAmount.toDouble() * exchangeRate
             textView.text = decimalFormat.format(amountAfterConv).toString()
         }
+    }else{
+        textView.text = ""
     }
 
     Log.d("BindingAdapter", "currentAmount: $currentAmount, exchangeRate: $exchangeRate")
