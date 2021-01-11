@@ -7,6 +7,7 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.*
+import com.google.android.gms.ads.*
 import com.yasu_k.currencyconverter.databinding.ActivityMainBinding
 import okhttp3.OkHttpClient
 import okhttp3.ResponseBody
@@ -36,6 +37,23 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         binding.lifecycleOwner = this
 
         setSpinners()
+        setAdView()
+    }
+    
+    private fun setAdView(){
+        val mAdView: AdView = findViewById(R.id.adView)
+        MobileAds.initialize(this){}
+        val adRequest = AdRequest.Builder().build()
+        mAdView.loadAd(adRequest)
+        mAdView.adListener = object : AdListener() {
+            override fun onAdLoaded() {
+                Log.d("AdMob", "Ad loaded")
+            }
+
+            override fun onAdFailedToLoad(errorCode: LoadAdError?) {
+                Log.d("AdMob", "Failed to load the ad: $errorCode")
+            }
+        }
     }
 
     private fun setSpinners(){
