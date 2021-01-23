@@ -55,6 +55,7 @@
                     android:id="@+id/spinnerCurrencyFrom"
                     android:layout_width="130dp"
                     android:layout_height="match_parent"
+                    android:spinnerMode="dropdown"
                     android:entries="@array/currency_array" />
 
                 <com.google.android.material.textview.MaterialTextView
@@ -147,8 +148,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            app:adSize="BANNER"
-            app:adUnitId="ca-app-pub-3940256099942544/6300978111"
+            app:adSize="LARGE_BANNER"
+            app:adUnitId="ca-app-pub-6638004970288520/5036878102"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.5"
