@@ -8,7 +8,7 @@ class ConverterViewModel: ViewModel() {
     val currencyTo: MutableLiveData<String> = MutableLiveData()
     val rateDate: MutableLiveData<String> = MutableLiveData()
     val currencySymbol: MutableLiveData<String> = MutableLiveData()
-    val exchangeRates: MutableLiveData<RateResponse> = MutableLiveData()
+    val exchangeRates: MutableLiveData<RateXmlResponse> = MutableLiveData()
     val exchangeRate: MutableLiveData<Double> = MutableLiveData()
     val amountBeforeConversion: MutableLiveData<String> = MutableLiveData()
 

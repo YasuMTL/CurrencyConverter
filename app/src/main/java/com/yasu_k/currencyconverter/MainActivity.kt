@@ -16,13 +16,14 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
+
 
 class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
-    companion object{
-        const val URL = "https://api.exchangeratesapi.io/"
+    companion object
+    {
+        const val URL = "https://www.ecb.europa.eu/"
         private lateinit var mViewModel: ConverterViewModel
     }
 
@@ -37,7 +38,8 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         binding.lifecycleOwner = this
 
         setSpinners()
-        setAdView()
+        // Turn Ad off for now
+        //setAdView()
     }
     
     private fun setAdView(){
@@ -74,59 +76,67 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             })
             .build()
 
+        val converter = XmlConverterFactory.create()
         val retrofit = Retrofit.Builder()
             .baseUrl(URL)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(converter)
             .client(okHttpClient)
             .build()
 
-        val service = retrofit.create(ExchangeApiService::class.java)
-        val call = service.getExchangeRate(mViewModel.currencyFrom.value, mViewModel.currencyTo.value)
+        //val service = retrofit.create(ExchangeApiService::class.java)
+        val service = retrofit.create(ApiServiceXml::class.java)
+        //val call = service.getExchangeRate(mViewModel.currencyFrom.value, mViewModel.currencyTo.value)
+        val call = service.getExchangeRate()
         Log.d("CURRENCY", "currencyFrom: ${mViewModel.currencyFrom} currencyTo: ${mViewModel.currencyTo}")
 
-        call.enqueue(object : Callback<RateResponse> {
-            override fun onResponse(call: Call<RateResponse>?, response: Response<RateResponse>) {
+        call.enqueue(object : Callback<RateXmlResponse> {
+            override fun onResponse(call: Call<RateXmlResponse>?, response: Response<RateXmlResponse>) {
                 val apiResponse = response.body()
 
-                if (response.isSuccessful) {
-                    when(mViewModel.currencyTo.value){
-                        "CAD" -> {
-                        mViewModel.currencySymbol.value = "$"
-                        mViewModel.exchangeRate.value = apiResponse.rates.CAD}
+                if (response.isSuccessful && apiResponse != null)
+                {
+                    val currencyFrom = mViewModel.currencyFrom.value
+                    val currencyTo = mViewModel.currencyTo.value
 
-                        "USD" -> {
-                        mViewModel.currencySymbol.value = "$"
-                        mViewModel.exchangeRate.value = apiResponse.rates.USD}
+                    if (currencyFrom.equals(currencyTo) )
+                    {
+                        mViewModel.exchangeRate.value = 1.0
+                    }
+                    else if (currencyTo.equals("EUR") )
+                    {
+                        mViewModel.exchangeRate.value = 1 / apiResponse.getRate(currencyFrom!!)
+                    }
+                    else if(currencyFrom.equals("EUR") )
+                    {
+                        mViewModel.exchangeRate.value = apiResponse.getRate(currencyTo!!)
+                    }
+                    else
+                    {
+                        val from = apiResponse.getRate(currencyFrom!!)
+                        val to = apiResponse.getRate(currencyTo!!)
 
-                        "EUR" -> {
-                        mViewModel.currencySymbol.value = "€"
-                        mViewModel.exchangeRate.value = apiResponse.rates.EUR}
-
-                        "JPY" -> {
-                        mViewModel.currencySymbol.value = "¥"
-                        mViewModel.exchangeRate.value = apiResponse.rates.JPY}
-
-                        else -> {
-                        mViewModel.exchangeRate.value = 0.0
-                        mViewModel.currencySymbol.value = ""}
+                        if(from != 0.0)
+                        {
+                            mViewModel.exchangeRate.value = to / from
+                        }
                     }
 
-                    mViewModel.rateDate.value = "Update: ${apiResponse.date.toString()}"
-
                     //LiveData
-                    mViewModel.exchangeRates.postValue(apiResponse)
+                    mViewModel.exchangeRates.postValue(apiResponse)//--> How to check the value in livedata??
 
                     Log.d("tvRate", "I'm gonna update the exchange rate!!")
-
-                }else{
+                }
+                else
+                {
                     mViewModel.exchangeRates.postValue(null)
-                    val errorBody: ResponseBody = response.errorBody()
+                    val errorBody: ResponseBody? = response.errorBody()
                     Log.e("API call fail", errorBody.toString())
                 }
             }
 
-            override fun onFailure(call: Call<RateResponse>?, t: Throwable?) {
-                Toast.makeText(applicationContext, "FAILURE !!!", Toast.LENGTH_SHORT).show()
+            override fun onFailure(call: Call<RateXmlResponse>?, t: Throwable?) {
+                Toast.makeText(applicationContext, "FAILURE: " + t.toString(), Toast.LENGTH_SHORT).show()
+                Log.e("onFailure", t.toString())
                 mViewModel.exchangeRates.postValue(null)
             }
         })
