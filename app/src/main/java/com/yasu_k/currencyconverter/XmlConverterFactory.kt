@@ -12,9 +12,6 @@ class XmlConverterFactory private constructor(): Converter.Factory()
         annotations: Array<out Annotation>,
         retrofit: Retrofit
     ): Converter<ResponseBody, *> = XmlResponseConverter()
-//    {
-//        return super.responseBodyConverter(type, annotations, retrofit)
-//    }
 
     companion object{
         fun create() = XmlConverterFactory()
