@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.launch
 import com.google.android.gms.ads.*
 import com.yasu_k.currencyconverter.databinding.ActivityMainBinding
+import java.util.*
 
 class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
@@ -68,6 +69,15 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
             }
         }
 
+        currencyList.add("EUR")
+        currencyList.sortWith(String.CASE_INSENSITIVE_ORDER)
+
+        //test
+//        for(aCurrency:String in currencyList)
+//        {
+//            Log.i("currency", aCurrency)
+//        }
+
         return currencyList
     }
 
@@ -77,11 +87,52 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         val spinnerCurrencyTo: Spinner = findViewById(R.id.spinnerCurrencyTo)
 
         val currencyList = getCurrencyList()
+        val flagList: Array<Int> = arrayOf(
+                    R.drawable.au,
+                    R.drawable.bg,
+                    R.drawable.br,
+                    R.drawable.ca,
+                    R.drawable.ch,
+                    R.drawable.cn,
+                    R.drawable.cz,
+                    R.drawable.dk,
+                    R.drawable.eu,
+                    R.drawable.gb,
+                    R.drawable.hk,
+                    R.drawable.hr,
+                    R.drawable.hu,
+                    R.drawable.id,
+                    R.drawable.il,
+                    R.drawable.ind,
+                    R.drawable.isl,
+                    R.drawable.jp,
+                    R.drawable.kr,
+                    R.drawable.mx,
+                    R.drawable.my,
+                    R.drawable.no,
+                    R.drawable.nz,
+                    R.drawable.ph,
+                    R.drawable.pl,
+                    R.drawable.ro,
+                    R.drawable.ru,
+                    R.drawable.se,
+                    R.drawable.sg,
+                    R.drawable.th,
+                    R.drawable.tr,
+                    R.drawable.us,
+                    R.drawable.za)
 
         val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, currencyList)
+        // test
+        //val flagAdapter = FlagAdapter(applicationContext, )
+        val flagAdapter = FlagAdapter(applicationContext, flagList, currencyList)
 
-        spinnerCurrencyFrom.adapter = arrayAdapter
-        spinnerCurrencyTo.adapter = arrayAdapter
+        //test
+        arrayAdapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice)
+
+        //spinnerCurrencyFrom.adapter = arrayAdapter
+        spinnerCurrencyFrom.adapter = flagAdapter
+        spinnerCurrencyTo.adapter = flagAdapter
 
         spinnerCurrencyFrom.onItemSelectedListener = this
         spinnerCurrencyTo.onItemSelectedListener = this
@@ -190,6 +241,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         when (parent.id){
             R.id.spinnerCurrencyFrom -> {
                 mViewModel.currencyFrom.value = "" + parent.getItemAtPosition(position)
+                //mViewModel.currencyTo.value = "" + R.id.spinnerCurrencyTo.getItemAtPosition(position)
                 getCurrentRate()
             }
 
