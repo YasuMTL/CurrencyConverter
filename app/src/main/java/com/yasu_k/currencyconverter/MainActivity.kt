@@ -17,7 +17,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
     companion object
     {
-        //const val URL = "https://www.ecb.europa.eu/"
         private lateinit var mViewModel: ConverterViewModel
         private var result: RateXmlResponse? = null
     }
@@ -26,7 +25,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        mViewModel = ViewModelProviders.of(this).get(ConverterViewModel::class.java)
+        mViewModel = ViewModelProvider(this).get(ConverterViewModel::class.java)
 
         val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.viewModel = mViewModel
@@ -52,7 +51,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                 Log.d("AdMob", "Ad loaded")
             }
 
-            override fun onAdFailedToLoad(errorCode: LoadAdError?) {
+            override fun onAdFailedToLoad(errorCode: LoadAdError) {
                 Log.d("AdMob", "Failed to load the ad: $errorCode")
             }
         }

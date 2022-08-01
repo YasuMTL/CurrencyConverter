@@ -8,7 +8,8 @@
         android:roundIcon="@mipmap/iconmonstr_currency_36_240"
         android:supportsRtl="true"
         android:theme="@style/Theme.CurrencyConverter">
-        <activity android:name=".MainActivity">
+        <activity android:name=".MainActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

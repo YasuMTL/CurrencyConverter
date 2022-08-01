@@ -21,7 +21,7 @@ object RetrofitClient {// Singleton
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(converter)
-            .client(okHttpClient )
+            .client(okHttpClient)
             .build()
     }
     val retrofitService: ApiServiceXml by lazy {

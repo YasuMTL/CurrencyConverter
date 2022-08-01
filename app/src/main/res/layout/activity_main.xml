@@ -120,9 +120,9 @@
                     android:autofillHints=""
                     android:gravity="center"
                     android:hint="@string/before_conversion"
-                    android:inputType="numberDecimal"
-                    android:text="@={viewModel.amountBeforeConversion}" />
 
+                    android:text="@={viewModel.amountBeforeConversion}" />
+<!--                android:inputType="numberDecimal"-->
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tvCurrencyAfterConversion"
                     android:layout_width="79dp"
