@@ -24,6 +24,7 @@ object RetrofitClient {// Singleton
             .client(okHttpClient)
             .build()
     }
+
     val retrofitService: ApiServiceXml by lazy {
         retrofit().create(ApiServiceXml::class.java)
     }

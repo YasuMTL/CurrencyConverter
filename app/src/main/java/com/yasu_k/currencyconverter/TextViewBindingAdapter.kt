@@ -11,6 +11,7 @@ fun onTextChanged(textView:TextView, currentAmount: String, exchangeRate: Double
         if (currentAmount.isNotEmpty() || exchangeRate > 0.0){
             val decimalFormat = DecimalFormat("0.0")
             val amountAfterConv = currentAmount.toDouble() * exchangeRate
+            //val amountAfterConv = getCurrentAmount(currentAmount) * exchangeRate
             textView.text = decimalFormat.format(amountAfterConv).toString()
         }
     }else{
@@ -25,3 +26,12 @@ fun formatDecimal(textView: TextView, exchangeRate: Double){
     val decimalFormat = DecimalFormat("0.0000")
     textView.text = decimalFormat.format(exchangeRate)
 }
+
+//fun getCurrentAmount(enteredAmount: String): Double {
+//    val currentAmount: Double
+//
+//    enteredAmount.trim()
+//    currentAmount = enteredAmount.toDouble()
+//
+//    return currentAmount
+//}
