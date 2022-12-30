@@ -3,15 +3,16 @@ package com.yasu_k.currencyconverter
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.widget.*
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
+import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.*
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
-import kotlinx.coroutines.launch
 import com.google.android.gms.ads.*
 import com.yasu_k.currencyconverter.databinding.ActivityMainBinding
-import java.util.*
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
@@ -33,7 +34,9 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         lifecycleScope.launch()
         {
-            result = getApiResponse()
+            //result = getApiResponse()
+            result = ApiResponseFetcher(RetrofitClient.retrofitService).getApiResponse()
+            println("result = $result")
             setSpinners()
         }
 
@@ -137,7 +140,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         spinnerCurrencyTo.onItemSelectedListener = this
     }
 
-    private fun calculateRate
+    fun calculateRate
     (
         currencyFrom:String,
         currencyTo:String,
@@ -180,38 +183,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         }
 
         return result
-    }
-
-    private suspend fun getApiResponse():RateXmlResponse?
-    {
-        try
-        {
-            val result = RetrofitClient.retrofitService.getExchangeRate()
-            Log.d("onResponse", "Succeed to fetch exchange rates")
-
-            /*call.enqueue(object : Callback<RateXmlResponse>
-            {
-                override fun onResponse(call: Call<RateXmlResponse>?, response: Response<RateXmlResponse>)
-                {
-                    if (response.isSuccessful)
-                    {
-                        Log.d("onResponse", "Succeed to fetch exchange rates\nresult: ${response.body()}")
-                        result = response.body()
-                    }
-                }
-
-                override fun onFailure(call: Call<RateXmlResponse>?, t: Throwable?) {
-                    result = null
-                    Log.e("onFailure", t.toString())
-                }
-            })*/
-
-            return result
-        }
-        catch (e: Exception)
-        {
-            return null
-        }
     }
 
     private fun getCurrentRate()
