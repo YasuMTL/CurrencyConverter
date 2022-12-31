@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        mViewModel = ViewModelProvider(this).get(ConverterViewModel::class.java)
+        mViewModel = ViewModelProvider(this)[ConverterViewModel::class.java]
 
         val binding: ActivityMainBinding = DataBindingUtil.setContentView(this, R.layout.activity_main)
         binding.viewModel = mViewModel
@@ -116,7 +116,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                     R.drawable.ph,
                     R.drawable.pl,
                     R.drawable.ro,
-                    R.drawable.ru,
+                    //R.drawable.ru,
                     R.drawable.se,
                     R.drawable.sg,
                     R.drawable.th,
