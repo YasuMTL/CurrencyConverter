@@ -34,7 +34,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         lifecycleScope.launch()
         {
-            //result = getApiResponse()
             result = ApiResponseFetcher(RetrofitClient.retrofitService).getApiResponse()
             println("result = $result")
             setSpinners()
@@ -73,12 +72,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         currencyList.add("EUR")
         currencyList.sortWith(String.CASE_INSENSITIVE_ORDER)
-
-        //test
-//        for(aCurrency:String in currencyList)
-//        {
-//            Log.i("currency", aCurrency)
-//        }
 
         return currencyList
     }
@@ -125,14 +118,10 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                     R.drawable.za)
 
         val arrayAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, currencyList)
-        // test
-        //val flagAdapter = FlagAdapter(applicationContext, )
         val flagAdapter = FlagAdapter(applicationContext, flagList, currencyList)
 
-        //test
         arrayAdapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice)
 
-        //spinnerCurrencyFrom.adapter = arrayAdapter
         spinnerCurrencyFrom.adapter = flagAdapter
         spinnerCurrencyTo.adapter = flagAdapter
 
@@ -150,20 +139,9 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         val result:Double
 
         when {
-            currencyFrom == currencyTo ->
-            {
-                result = 1.0
-            }
-
-            currencyTo == "EUR" ->
-            {
-                result = 1 / apiResponse.getRate(currencyFrom)
-            }
-
-            currencyFrom == "EUR" ->
-            {
-                result = apiResponse.getRate(currencyTo)
-            }
+            currencyFrom == currencyTo -> result = 1.0
+            currencyTo == "EUR" -> result = 1 / apiResponse.getRate(currencyFrom)
+            currencyFrom == "EUR" -> result = apiResponse.getRate(currencyTo)
 
             else ->
             {
@@ -194,7 +172,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
             mViewModel.exchangeRate.value = calculateRate(currencyFrom!!, currencyTo!!, result!!)
 
-            //LiveData
             mViewModel.exchangeRates.postValue(result)//--> How to check the value in livedata??
 
             Log.d("tvRate", "I'm gonna update the exchange rate!!")
@@ -211,7 +188,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         when (parent.id){
             R.id.spinnerCurrencyFrom -> {
                 mViewModel.currencyFrom.value = "" + parent.getItemAtPosition(position)
-                //mViewModel.currencyTo.value = "" + R.id.spinnerCurrencyTo.getItemAtPosition(position)
                 getCurrentRate()
             }
 

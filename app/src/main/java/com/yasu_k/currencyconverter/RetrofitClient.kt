@@ -5,7 +5,7 @@ import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
 
-object RetrofitClient {// Singleton
+object RetrofitClient {
     private const val BASE_URL = "https://www.ecb.europa.eu/"
     private val converter = XmlConverterFactory.create()
     private val okHttpClient= OkHttpClient.Builder()

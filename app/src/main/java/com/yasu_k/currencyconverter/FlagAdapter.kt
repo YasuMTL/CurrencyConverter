@@ -32,7 +32,6 @@ class FlagAdapter(
     }
 
     override fun getItem(position: Int): Any {
-        //return position
         return mCurrencyNames[position]
     }
 
@@ -41,19 +40,15 @@ class FlagAdapter(
     }
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-        val view: View?
-        val icon: ImageView?
-        val currencyNames: TextView?
-
-        view = mInflater!!.inflate(R.layout.custom_spinner_currencies, parent,false)
-        icon = view.findViewById<ImageView>(R.id.imageView)
-        currencyNames = view.findViewById<TextView>(R.id.textView)
+        val view = mInflater!!.inflate(R.layout.custom_spinner_currencies, parent,false)
+        val icon = view.findViewById<ImageView>(R.id.imageView)
+        val currencyNames = view.findViewById<TextView>(R.id.textView)
 
         val imageToSet = mFlags[position]
         val currencyToSet = mCurrencyNames[position]
 
         icon.setImageResource(imageToSet)
-        currencyNames.setText(currencyToSet)
+        currencyNames.text = currencyToSet
 
         return view!!
     }

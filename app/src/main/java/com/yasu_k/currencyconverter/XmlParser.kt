@@ -32,21 +32,13 @@ class XmlParser
 
                 when (eventType)
                 {
-//                    XmlPullParser.START_TAG ->
-//                    if (tagName.equals("cube", ignoreCase = true))
-//                    {
-//                    }
-
-                    //XmlPullParser.TEXT -> rateResponse. = parser.text
-
                     XmlPullParser.END_TAG -> if (tagName.equals("cube", ignoreCase = true))
                     {
-
                         try
                         {
                             if(!parser.getAttributeValue(null, "currency").isNullOrEmpty() )
                             {
-                                val rateResponse = CurrencyRate("", 0.0)// Try to instantiate here the object of rateResponse
+                                val rateResponse = CurrencyRate("", 0.0)
                                 currency = parser.getAttributeValue(null, "currency")
                                 rate = (parser.getAttributeValue(null, "rate") ).toDouble()
 
@@ -56,8 +48,6 @@ class XmlParser
                                 rates.add(rateResponse)
 
                                 rateResponses.currencyRates
-                                //rateResponses.add(rateResponse)
-                                //rateResponses.currencyRates
                             }
                         }
                         catch (e: XmlPullParserException)
