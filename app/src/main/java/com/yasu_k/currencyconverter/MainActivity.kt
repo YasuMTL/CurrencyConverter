@@ -101,7 +101,7 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
                     R.drawable.eu,
                     R.drawable.gb,
                     R.drawable.hk,
-                    R.drawable.hr,
+                    //R.drawable.hr,
                     R.drawable.hu,
                     R.drawable.id,
                     R.drawable.il,
