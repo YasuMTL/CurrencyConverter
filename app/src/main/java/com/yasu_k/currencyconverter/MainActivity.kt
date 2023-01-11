@@ -187,12 +187,12 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     {
         when (parent.id){
             R.id.spinnerCurrencyFrom -> {
-                mViewModel.currencyFrom.value = "" + parent.getItemAtPosition(position)
+                mViewModel.currencyFrom.value = parent.getItemAtPosition(position).toString()
                 getCurrentRate()
             }
 
             R.id.spinnerCurrencyTo -> {
-                mViewModel.currencyTo.value = "" + parent.getItemAtPosition(position)
+                mViewModel.currencyTo.value = parent.getItemAtPosition(position).toString()
                 getCurrentRate()
             }
 
