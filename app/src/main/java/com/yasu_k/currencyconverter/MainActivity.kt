@@ -21,16 +21,21 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
         private var result: RateXmlResponse? = null
     }
 
+    private var _binding: ActivityMainBinding? = null
+    private val binding get() = _binding!!
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         mViewModel = ViewModelProvider(this)[ConverterViewModel::class.java]
 
-        val binding: ActivityMainBinding =
+        _binding =
             DataBindingUtil.setContentView(this, R.layout.activity_main)
-        binding.viewModel = mViewModel
-        binding.lifecycleOwner = this
+        binding.apply {
+            viewModel = mViewModel
+            lifecycleOwner = this@MainActivity
+        }
 
         lifecycleScope.launch()
         {
@@ -75,9 +80,6 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
     }
 
     private fun setSpinners() {
-        val spinnerCurrencyFrom: Spinner = findViewById(R.id.spinnerCurrencyFrom)
-        val spinnerCurrencyTo: Spinner = findViewById(R.id.spinnerCurrencyTo)
-
         val currencyList = getCurrencyList()
         val flagList: Array<Int> = arrayOf(
             R.drawable.au,
@@ -120,11 +122,11 @@ class MainActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
         arrayAdapter.setDropDownViewResource(android.R.layout.select_dialog_singlechoice)
 
-        spinnerCurrencyFrom.adapter = flagAdapter
-        spinnerCurrencyTo.adapter = flagAdapter
+        binding.spinnerCurrencyFrom.adapter = flagAdapter
+        binding.spinnerCurrencyTo.adapter = flagAdapter
 
-        spinnerCurrencyFrom.onItemSelectedListener = this
-        spinnerCurrencyTo.onItemSelectedListener = this
+        binding.spinnerCurrencyFrom.onItemSelectedListener = this
+        binding.spinnerCurrencyTo.onItemSelectedListener = this
     }
 
     fun calculateRate(
